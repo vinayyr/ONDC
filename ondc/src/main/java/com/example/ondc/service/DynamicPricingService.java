@@ -52,11 +52,11 @@ public class DynamicPricingService {
 
         if (droolEngineDto.getCategoryPercentage() == 0)
             cnt--;
-        if (droolEngineDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getSeasonPercentage() == 0)
             cnt--;
-        if (droolEngineDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getInventoryPercentage() == 0)
             cnt--;
-        if (droolEngineDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getOrderPercentage() == 0)
             cnt--;
 
         if (cnt == 0) {

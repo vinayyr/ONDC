@@ -58,7 +58,7 @@ public class DroolEngineDto {
 
     public DroolEngineDto(EanDataResponse eanData, String pincode){
         this.availableInventory=eanData.getEanData().getQuantity();
-        this.mrp = BigDecimal.valueOf(Double.valueOf(eanData.getEanData().getMrp()));
+        this.mrp = BigDecimal.valueOf(Double.valueOf(eanData.getEanData().getBasePrice()));
         this.category = eanData.getEanData().getCategory();
         this.pincode = pincode;
         this.zone = TimeZone.getDefault();
