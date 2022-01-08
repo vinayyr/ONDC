@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 @Component
 @Slf4j
@@ -24,12 +25,14 @@ public class EanDataService {
 
     public void insertEanData(EanData eandata) {
         log.info("Request to insert eandata : {}", eandata);
-        eanDataRepository.save(eandata);
+        if(!ObjectUtils.isEmpty(eandata)) {
+            eanDataRepository.save(eandata);
+        }
     }
 
-    public void updateEanData(Long id, EanData eandata) {
+    public void updateEanData(String ean, EanData eandata) {
         log.info("Request to insert eandata : {}", eandata);
-        EanData oldEanData = eanDataRepository.getById(id);
+        EanData oldEanData = eanDataRepository.findOneByEan(ean);
         oldEanData.setEan(eandata.getEan());
         oldEanData.setCategory(eandata.getCategory());
         oldEanData.setMrp(eandata.getMrp());
@@ -41,8 +44,12 @@ public class EanDataService {
     public EanDataResponse getEanData(String ean) {
         log.info("Request to get eandata for ean : {}", ean);
         EanData eanData = eanDataRepository.findOneByEan(ean);
-        List<OrderDetails> orderDetails = orderDetailsRepository.findAllByEan(eanData.getEan());
-        return EanDataResponse.builder().eanData(eanData).orderDetails(orderDetails).build();
+        if(!ObjectUtils.isEmpty(eanData)) {
+            List<OrderDetails> orderDetails = orderDetailsRepository.findAllByEan(eanData.getEan());
+            return EanDataResponse.builder().eanData(eanData).orderDetails(orderDetails).build();
+        }
+        return EanDataResponse.builder().eanData(eanData).orderDetails(null).build();
+
     }
 
     public List<EanDataResponse> getAllEanData() {

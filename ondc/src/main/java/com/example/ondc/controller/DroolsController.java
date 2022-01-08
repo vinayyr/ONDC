@@ -1,6 +1,6 @@
 package com.example.ondc.controller;
 
-import com.example.ondc.model.DroolsInputDto;
+import com.example.ondc.model.DroolEngineDto;
 import com.example.ondc.service.DynamicPricingService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +25,7 @@ public class DroolsController {
     DynamicPricingService dynamicPricingService;
 
     @PostMapping(value = "/calculation", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> dynamicPricingCalculation(@RequestBody DroolsInputDto dpdto) {
+    public ResponseEntity<?> dynamicPricingCalculation(@RequestBody DroolEngineDto dpdto) {
         return ResponseEntity.ok(dynamicPricingService.calculateAndSetPrice(dpdto));
     }
 }

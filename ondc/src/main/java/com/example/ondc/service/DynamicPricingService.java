@@ -1,6 +1,6 @@
 package com.example.ondc.service;
 
-import com.example.ondc.model.DroolsInputDto;
+import com.example.ondc.model.DroolEngineDto;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.kie.api.runtime.KieContainer;
@@ -23,7 +23,7 @@ public class DynamicPricingService {
     @Autowired
     KieContainer kieContainer;
 
-    public DroolsInputDto calculateAndSetPrice(DroolsInputDto dpdto) {
+    public DroolEngineDto calculateAndSetPrice(DroolEngineDto dpdto) {
         if (dpdto.getAvailableInventory() == 0) {
             dpdto.setSellingPrice(dpdto.getMrp());
         }
@@ -36,7 +36,7 @@ public class DynamicPricingService {
         return dpdto;
     }
 
-    private void updateDefaultValue(DroolsInputDto dpdto) {
+    private void updateDefaultValue(DroolEngineDto dpdto) {
         if (ObjectUtils.isEmpty(dpdto.getZone())) {
             dpdto.setZone(TimeZone.getDefault());
         }
@@ -47,27 +47,27 @@ public class DynamicPricingService {
 
     }
 
-    private void updateSp(DroolsInputDto droolsInputDto) {
+    private void updateSp(DroolEngineDto droolEngineDto) {
         int cnt = 4;
 
-        if (droolsInputDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getCategoryPercentage() == 0)
             cnt--;
-        if (droolsInputDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getCategoryPercentage() == 0)
             cnt--;
-        if (droolsInputDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getCategoryPercentage() == 0)
             cnt--;
-        if (droolsInputDto.getCategoryPercentage() == 0)
+        if (droolEngineDto.getCategoryPercentage() == 0)
             cnt--;
 
         if (cnt == 0) {
-            droolsInputDto.setSellingPrice(droolsInputDto.getMrp());
+            droolEngineDto.setSellingPrice(droolEngineDto.getMrp());
 
         } else {
-            BigDecimal value = BigDecimal.valueOf((droolsInputDto.getCategoryPercentage()
-                    + droolsInputDto.getSeasonPercentage()
-                    + droolsInputDto.getInventoryPercentage()
-                    + droolsInputDto.getOrderPercentage()) / (cnt*100));
-            droolsInputDto.setSellingPrice(value.multiply(droolsInputDto.getMrp()).add(droolsInputDto.getMrp()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+            BigDecimal value = BigDecimal.valueOf((droolEngineDto.getCategoryPercentage()
+                    + droolEngineDto.getSeasonPercentage()
+                    + droolEngineDto.getInventoryPercentage()
+                    + droolEngineDto.getOrderPercentage()) / (cnt*100));
+            droolEngineDto.setSellingPrice(value.multiply(droolEngineDto.getMrp()).add(droolEngineDto.getMrp()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
         }
 
     }

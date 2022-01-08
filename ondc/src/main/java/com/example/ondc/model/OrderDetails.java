@@ -24,4 +24,9 @@ public class OrderDetails {
 
     String pincode;
 
+    public OrderDetails(String ean, String pincode, long i) {
+        this.ean= ean;
+        this.ordersCount = i;
+        this.pincode = pincode;
+    }
 }

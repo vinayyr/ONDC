@@ -3,10 +3,12 @@ package com.example.ondc.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -15,7 +17,8 @@ import java.util.TimeZone;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DroolsInputDto {
+@NoArgsConstructor
+public class DroolEngineDto {
 
     BigDecimal mrp;
 
@@ -53,4 +56,12 @@ public class DroolsInputDto {
 
     double orderPercentage;
 
+    public DroolEngineDto(EanDataResponse eanData, String pincode){
+        this.availableInventory=eanData.getEanData().getQuantity();
+        this.mrp = BigDecimal.valueOf(Double.valueOf(eanData.getEanData().getMrp()));
+        this.category = eanData.getEanData().getCategory();
+        this.pincode = pincode;
+        this.zone = TimeZone.getDefault();
+        this.date = new Date();
+    }
 }
