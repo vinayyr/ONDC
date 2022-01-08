@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +22,7 @@ public class EanData extends EanDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    @NonNull
     String ean;
 
     int quantity;
@@ -28,8 +30,6 @@ public class EanData extends EanDetails {
     String category;
 
     String seasons;
-
-    String weather;
 
     String shelfLife;
 

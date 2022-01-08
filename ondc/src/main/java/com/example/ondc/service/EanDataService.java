@@ -34,8 +34,7 @@ public class EanDataService {
         oldEanData.setCategory(eandata.getCategory());
         oldEanData.setMrp(eandata.getMrp());
         oldEanData.setQuantity(eandata.getQuantity());
-        oldEanData.setWeather(eandata.getWeather());
-        oldEanData.setSeasons(eandata.getWeather());
+        oldEanData.setSeasons(eandata.getSeasons());
         eanDataRepository.save(oldEanData);
     }
 

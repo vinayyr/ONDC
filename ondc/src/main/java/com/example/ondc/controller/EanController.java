@@ -4,6 +4,8 @@ import com.example.ondc.model.EanData;
 import com.example.ondc.model.EanDataResponse;
 import com.example.ondc.service.EanDataService;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EanController {
 
     @Autowired
