@@ -1,12 +1,13 @@
 package com.example.ondc.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Minutes;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -15,65 +16,25 @@ import java.util.TimeZone;
 @Slf4j
 public class DateUtils {
 
-    public static boolean isLessOrEqualDate(TimeZone zone, String stringDate1, Date date2) {
-        try {
-            if (StringUtils.isEmpty(stringDate1)) {
-                return true;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            sdf.setTimeZone((ObjectUtils.isEmpty(zone)) ? TimeZone.getDefault() : zone);
-            return sdf.parse(stringDate1).compareTo(date2) >= 0;
-        } catch (ParseException e) {
-            log.error(e.getMessage());
-            return false;
-        }
+    public static boolean isCompareDateRange(TimeZone zone, LocalDateTime expireDate, Long lowerLimit, Long upperLimit) {
 
+        if (StringUtils.isEmpty(expireDate) || ObjectUtils.isEmpty(lowerLimit) || ObjectUtils.isEmpty(upperLimit)) {
+            return true;
+        }
+        Days days = Days.daysBetween(expireDate, new LocalDateTime(DateTimeZone.forTimeZone(zone)));
+        return (days.getDays() >= lowerLimit && days.getDays() <= upperLimit);
     }
 
-    public static boolean isGreaterOrEqualDate(TimeZone zone, String stringDate1, Date date2) {
-        try {
-            if (StringUtils.isEmpty(stringDate1)) {
-                return true;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            sdf.setTimeZone((ObjectUtils.isEmpty(zone)) ? TimeZone.getDefault() : zone);
-            return sdf.parse(stringDate1).compareTo(date2) <= 0;
 
-        } catch (ParseException e) {
-            log.error(e.getMessage());
-            return false;
+    public static boolean isCompareTimeRange(TimeZone zone, LocalDateTime expireDate, Long lowerLimit, Long upperLimit) {
+
+        if (StringUtils.isEmpty(expireDate) || StringUtils.isEmpty(lowerLimit) || StringUtils.isEmpty(upperLimit)) {
+            return true;
         }
-
+        Minutes minutes = Minutes.minutesBetween(expireDate, new LocalDateTime(DateTimeZone.forTimeZone(zone)));
+        return (minutes.getMinutes() >= lowerLimit && minutes.getMinutes() <= upperLimit);
     }
 
-    public static boolean isLessOrEqualTime(TimeZone zone, String time, Date date2) {
-        try {
-            if (StringUtils.isEmpty(time)) {
-                return true;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            sdf.setTimeZone((ObjectUtils.isEmpty(zone)) ? TimeZone.getDefault() : zone);
-            return sdf.parse(time).compareTo(date2) >= 0;
-        } catch (ParseException e) {
-            log.error(e.getMessage());
-            return false;
-        }
-
-    }
-
-    public static boolean isGreaterOrEqualTime(TimeZone zone, String time, Date date2) {
-        try {
-            if (StringUtils.isEmpty(time)) {
-                return true;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            sdf.setTimeZone((ObjectUtils.isEmpty(zone)) ? TimeZone.getDefault() : zone);
-            return sdf.parse(time).compareTo(date2) <= 0;
-        } catch (ParseException e) {
-            log.error(e.getMessage());
-            return false;
-        }
-    }
 
     public static double isMultiple(Double weightge, Double percentage) {
         if (ObjectUtils.isEmpty(weightge) || ObjectUtils.isEmpty(percentage)) {

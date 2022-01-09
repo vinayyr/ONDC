@@ -3,6 +3,8 @@ package com.example.ondc.service;
 import com.example.ondc.model.DroolEngineDto;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -25,7 +26,7 @@ public class DynamicPricingService {
 
     public DroolEngineDto calculateAndSetPrice(DroolEngineDto dpdto) {
         if (dpdto.getAvailableInventory() == 0) {
-            dpdto.setSellingPrice(dpdto.getMrp());
+            dpdto.setSellingPrice(dpdto.getBasePrice());
         }
         KieSession kieSession = kieContainer.newKieSession();
         updateDefaultValue(dpdto);
@@ -41,14 +42,14 @@ public class DynamicPricingService {
             dpdto.setZone(TimeZone.getDefault());
         }
 
-        if (ObjectUtils.isEmpty(dpdto.getDate())) {
-            dpdto.setDate(new Date());
+        if (!ObjectUtils.isEmpty(dpdto.getExpireDateTime())) {
+            dpdto.setZonedExpireDateTime(LocalDateTime.parse(dpdto.getExpireDateTime(), DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:SS")));
         }
 
     }
 
     private void updateSp(DroolEngineDto droolEngineDto) {
-        int cnt = 4;
+        int cnt = 5;
 
         if (droolEngineDto.getCategoryPercentage() == 0)
             cnt--;
@@ -58,16 +59,18 @@ public class DynamicPricingService {
             cnt--;
         if (droolEngineDto.getOrderPercentage() == 0)
             cnt--;
+        if (droolEngineDto.getPerishablePercentage() == 0)
+            cnt--;
 
         if (cnt == 0) {
-            droolEngineDto.setSellingPrice(droolEngineDto.getMrp());
+            droolEngineDto.setSellingPrice(droolEngineDto.getBasePrice());
 
         } else {
             BigDecimal value = BigDecimal.valueOf((droolEngineDto.getCategoryPercentage()
                     + droolEngineDto.getSeasonPercentage()
                     + droolEngineDto.getInventoryPercentage()
-                    + droolEngineDto.getOrderPercentage()) / (cnt*100));
-            droolEngineDto.setSellingPrice(value.multiply(droolEngineDto.getMrp()).add(droolEngineDto.getMrp()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+                    + droolEngineDto.getOrderPercentage() + droolEngineDto.getPerishablePercentage()) / (cnt * 100));
+            droolEngineDto.setSellingPrice(value.multiply(droolEngineDto.getBasePrice()).add(droolEngineDto.getBasePrice()).setScale(2, BigDecimal.ROUND_HALF_EVEN));
         }
 
     }

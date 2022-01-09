@@ -1,14 +1,15 @@
 package com.example.ondc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.joda.time.LocalDateTime;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -20,13 +21,16 @@ import java.util.TimeZone;
 @NoArgsConstructor
 public class DroolEngineDto {
 
-    BigDecimal mrp;
+    BigDecimal basePrice;
 
     String category;
 
     String season;
 
-    Date date;
+    String expireDateTime;
+
+    @JsonIgnore
+    LocalDateTime zonedExpireDateTime;
 
     String pincode;
 
@@ -34,11 +38,11 @@ public class DroolEngineDto {
 
     int availableInventory;
 
-    TimeZone zone;
+    TimeZone zone = TimeZone.getTimeZone("IST");
 
     BigDecimal sellingPrice;
 
-    double percentage;
+    double perishableWeitage;
 
     double categoryWeitage;
 
@@ -56,12 +60,14 @@ public class DroolEngineDto {
 
     double orderPercentage;
 
-    public DroolEngineDto(EanDataResponse eanData, String pincode){
-        this.availableInventory=eanData.getEanData().getQuantity();
-        this.mrp = BigDecimal.valueOf(Double.valueOf(eanData.getEanData().getBasePrice()));
+    double perishablePercentage;
+
+    public DroolEngineDto(EanDataResponse eanData, String pincode) {
+        this.availableInventory = eanData.getEanData().getQuantity();
+        this.basePrice = BigDecimal.valueOf(Double.valueOf(eanData.getEanData().getBasePrice()));
         this.category = eanData.getEanData().getCategory();
         this.pincode = pincode;
         this.zone = TimeZone.getDefault();
-        this.date = new Date();
+//        this.expireDateTime = ZonedDateTime.now();
     }
 }
