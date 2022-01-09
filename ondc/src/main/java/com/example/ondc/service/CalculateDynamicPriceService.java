@@ -63,6 +63,7 @@ public class CalculateDynamicPriceService {
         droolEngineDto.setOrderWeightage(weightagesMap.getOrDefault(Constants.Identifier.ORDER, 0D));
         droolEngineDto.setInventoryWeitage(weightagesMap.getOrDefault(Constants.Identifier.INVENTORY, 0D));
         droolEngineDto.setSeasonWeitage(weightagesMap.getOrDefault(Constants.Identifier.SEASON, 0D));
+        droolEngineDto.setPerishableWeitage(weightagesMap.getOrDefault(Constants.Identifier.EXPIRY, 0D));
     }
 
     private String getCurrentSeasonForEan(EanDataResponse eanDataResponse, String pincode, String season) {
