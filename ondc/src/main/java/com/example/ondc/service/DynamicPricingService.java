@@ -1,6 +1,7 @@
 package com.example.ondc.service;
 
 import com.example.ondc.model.DroolEngineDto;
+import com.example.ondc.utils.KieUtils;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.joda.time.LocalDateTime;
@@ -21,14 +22,11 @@ import java.util.TimeZone;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DynamicPricingService {
 
-    @Autowired
-    KieContainer kieContainer;
-
     public DroolEngineDto calculateAndSetPrice(DroolEngineDto dpdto) {
         if (dpdto.getAvailableInventory() == 0) {
             dpdto.setSellingPrice(dpdto.getBasePrice());
         }
-        KieSession kieSession = kieContainer.newKieSession();
+        KieSession kieSession = KieUtils.getKieContainer().newKieSession();
         updateDefaultValue(dpdto);
         kieSession.insert(dpdto);
         kieSession.fireAllRules();
@@ -74,4 +72,5 @@ public class DynamicPricingService {
         }
 
     }
+
 }
